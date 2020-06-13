@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import logo from '../../assets/dota-logo.svg';
 
 import {
   Container,
+  HeaderContainer,
   Header,
   List,
   Content,
@@ -43,7 +44,6 @@ const Home: React.FC = () => {
         };
       });
 
-      console.log(formattedHeroes);
       setHeroes(formattedHeroes);
     }
 
@@ -52,24 +52,26 @@ const Home: React.FC = () => {
 
   return (
     <Container>
-      <Header>
-        <img src={logo} alt="dota" />
+      <HeaderContainer>
+        <Header>
+          <img src={logo} alt="dota" />
 
-        <List>
-          <li>
-            <button type="button">Inicio</button>
-          </li>
-          <li>
-            <button type="button">Comunidades</button>
-          </li>
-          <li>
-            <button type="button">Vídeos</button>
-          </li>
-          <li>
-            <button type="button">Pesquisar</button>
-          </li>
-        </List>
-      </Header>
+          <List>
+            <li>
+              <button type="button">Inicio</button>
+            </li>
+            <li>
+              <button type="button">Comunidades</button>
+            </li>
+            <li>
+              <button type="button">Vídeos</button>
+            </li>
+            <li>
+              <button type="button">Pesquisar</button>
+            </li>
+          </List>
+        </Header>
+      </HeaderContainer>
 
       <Content>
         {heroes.map((hero) => (

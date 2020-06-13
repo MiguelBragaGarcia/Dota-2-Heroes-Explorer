@@ -14,10 +14,16 @@ export const Container = styled.div`
   width: 100%;
 `;
 
-export const Header = styled.div`
+export const HeaderContainer = styled.div`
   width: 100%;
   height: 70px;
   background: #363636;
+`;
+
+export const Header = styled.div`
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 10px 0;
   display: flex;
   align-items: center;
 
@@ -54,6 +60,7 @@ export const List = styled.ul`
   li:last-of-type {
     border-right: none;
   }
+  /* Falta fazer o o header responsivo parte dos textos */
 `;
 
 export const Content = styled.div`
@@ -73,6 +80,21 @@ export const Content = styled.div`
     box-shadow: 3px 3px 4px 3px ${lighten(0.1, '#363636')};
     transform: translateY(-10px);
   }
+
+  @media screen and (max-width: 1300px) {
+    grid-template-columns: auto auto auto;
+    justify-content: center;
+  }
+
+  @media screen and (max-width: 1000px) {
+    grid-template-columns: auto auto;
+    justify-content: center;
+  }
+
+  @media screen and (max-width: 700px) {
+    grid-template-columns: auto;
+    justify-content: center;
+  }
 `;
 
 export const Hero = styled.div<HeroAttribute>`
@@ -85,6 +107,7 @@ export const Hero = styled.div<HeroAttribute>`
   text-align: center;
 
   background: #0f1211;
+  color: #fff;
 
   margin: 15px;
   border-radius: 4px;
@@ -117,6 +140,12 @@ export const Hero = styled.div<HeroAttribute>`
     width: 170px;
     height: 100px;
     border-radius: 10px;
+  }
+
+  @media screen and (max-width: 700px) {
+    width: 350px;
+    height: 300px;
+
   }
 `;
 
