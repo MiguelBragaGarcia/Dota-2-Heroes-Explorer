@@ -11,6 +11,7 @@ import {
   AttributeContainer,
   Hero,
   Attribute,
+  PageAction,
 } from './styles';
 import api from '../../services/api';
 
@@ -30,6 +31,8 @@ interface HeroData {
 
 const Home: React.FC = () => {
   const [heroes, setHeroes] = useState<HeroData[]>([]);
+  const [page, setPage] = useState(0);
+  const [heroesInPage, setHeroesInPage] = useState<HeroData[]>([]);
 
   useEffect(() => {
     async function loadHeroes() {
@@ -44,11 +47,26 @@ const Home: React.FC = () => {
         };
       });
 
+      setHeroesInPage(formattedHeroes.filter((hero) => hero.id <= 8));
       setHeroes(formattedHeroes);
     }
 
     loadHeroes();
   }, []);
+
+  const handlePageClick = useCallback(
+    (action) => {
+      const itensPerPage = 8;
+
+      action === 'back' ? setPage(page - 1) : setPage(page + 1);
+      const atualItem = page * itensPerPage;
+
+      setHeroesInPage(
+        heroes.filter((hero) => hero.id > atualItem && hero.id <= atualItem + 8)
+      );
+    },
+    [heroes, page]
+  );
 
   return (
     <Container>
@@ -74,7 +92,7 @@ const Home: React.FC = () => {
       </HeaderContainer>
 
       <Content>
-        {heroes.map((hero) => (
+        {heroesInPage.map((hero) => (
           <Hero
             key={hero.id}
             primaryAttribute={hero.primary_attr}
@@ -100,6 +118,20 @@ const Home: React.FC = () => {
           </Hero>
         ))}
       </Content>
+
+      <PageAction>
+        <button
+          type="button"
+          disabled={page < 1}
+          onClick={() => handlePageClick('back')}
+        >
+          Anterior
+        </button>
+        <span>{page}</span>
+        <button type="button" onClick={() => handlePageClick('next')}>
+          Próximo
+        </button>
+      </PageAction>
     </Container>
   );
 };

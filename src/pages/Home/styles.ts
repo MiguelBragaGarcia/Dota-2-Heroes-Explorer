@@ -207,3 +207,5 @@ export const Attribute = styled.p<AttributeInfo>`
         }
       `};
 `;
+
+export const PageAction = styled.div``;
