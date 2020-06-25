@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import logo from '../../assets/dota-logo.svg';
 
@@ -31,8 +31,13 @@ interface HeroData {
 
 const Home: React.FC = () => {
   const [heroes, setHeroes] = useState<HeroData[]>([]);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
+  const [nextPage, setNextPage] = useState(true);
+  const [prevPage, setPrevPage] = useState(true);
   const [heroesInPage, setHeroesInPage] = useState<HeroData[]>([]);
+  const [totalHeroes, setTotalHeroes] = useState(0);
+
+  const itensPerPage = 8;
 
   useEffect(() => {
     async function loadHeroes() {
@@ -47,26 +52,37 @@ const Home: React.FC = () => {
         };
       });
 
-      setHeroesInPage(formattedHeroes.filter((hero) => hero.id <= 8));
+      const resultHeroes = formattedHeroes.filter((hero, index, arr) => {
+        return index <= itensPerPage - 1;
+      });
+      console.log('Carregou todos os dados da página');
+
+      setTotalHeroes(formattedHeroes.length);
+      setHeroesInPage(resultHeroes);
       setHeroes(formattedHeroes);
     }
 
     loadHeroes();
   }, []);
 
-  const handlePageClick = useCallback(
-    (action) => {
-      const itensPerPage = 8;
+  useEffect(() => {
+    const nextPageEnabled = page < totalHeroes / itensPerPage;
+    const prevPageEnabled = page > 1;
 
-      action === 'back' ? setPage(page - 1) : setPage(page + 1);
-      const atualItem = page * itensPerPage;
-
-      setHeroesInPage(
-        heroes.filter((hero) => hero.id > atualItem && hero.id <= atualItem + 8)
+    const resultHeroes = heroes.filter((hero, index, arr) => {
+      arr.push(hero);
+      return (
+        index >= (page - 1) * itensPerPage && index <= page * itensPerPage - 1
       );
-    },
-    [heroes, page]
-  );
+    });
+
+    setHeroesInPage(resultHeroes);
+
+    setPrevPage(prevPageEnabled);
+    setNextPage(nextPageEnabled);
+
+    // Resolver bug de performance ao trocar de página específicamente ao retornar
+  }, [page, heroes, totalHeroes]);
 
   return (
     <Container>
@@ -122,13 +138,17 @@ const Home: React.FC = () => {
       <PageAction>
         <button
           type="button"
-          disabled={page < 1}
-          onClick={() => handlePageClick('back')}
+          disabled={!prevPage}
+          onClick={() => setPage(page - 1)}
         >
           Anterior
         </button>
         <span>{page}</span>
-        <button type="button" onClick={() => handlePageClick('next')}>
+        <button
+          type="button"
+          disabled={!nextPage}
+          onClick={() => setPage(page + 1)}
+        >
           Próximo
         </button>
       </PageAction>
