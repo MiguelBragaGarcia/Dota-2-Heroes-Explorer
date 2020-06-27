@@ -208,4 +208,19 @@ export const Attribute = styled.p<AttributeInfo>`
       `};
 `;
 
-export const PageAction = styled.div``;
+export const PageAction = styled.div`
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+
+  margin-top: -40px;
+  max-width: 1280px;
+
+  button {
+    margin: 0 20px;
+    border: none;
+    background: transparent;
+  }
+`;

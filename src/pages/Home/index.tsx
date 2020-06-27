@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
 import logo from '../../assets/dota-logo.svg';
 
@@ -55,7 +56,6 @@ const Home: React.FC = () => {
       const resultHeroes = formattedHeroes.filter((hero, index, arr) => {
         return index <= itensPerPage - 1;
       });
-      console.log('Carregou todos os dados da página');
 
       setTotalHeroes(formattedHeroes.length);
       setHeroesInPage(resultHeroes);
@@ -69,8 +69,7 @@ const Home: React.FC = () => {
     const nextPageEnabled = page < totalHeroes / itensPerPage;
     const prevPageEnabled = page > 1;
 
-    const resultHeroes = heroes.filter((hero, index, arr) => {
-      arr.push(hero);
+    const resultHeroes = heroes.filter((hero, index) => {
       return (
         index >= (page - 1) * itensPerPage && index <= page * itensPerPage - 1
       );
@@ -80,8 +79,6 @@ const Home: React.FC = () => {
 
     setPrevPage(prevPageEnabled);
     setNextPage(nextPageEnabled);
-
-    // Resolver bug de performance ao trocar de página específicamente ao retornar
   }, [page, heroes, totalHeroes]);
 
   return (
@@ -141,7 +138,7 @@ const Home: React.FC = () => {
           disabled={!prevPage}
           onClick={() => setPage(page - 1)}
         >
-          Anterior
+          <FiChevronLeft size={30} color={!prevPage ? '#cfcfcf' : '#363636'} />
         </button>
         <span>{page}</span>
         <button
@@ -149,7 +146,7 @@ const Home: React.FC = () => {
           disabled={!nextPage}
           onClick={() => setPage(page + 1)}
         >
-          Próximo
+          <FiChevronRight size={30} color={!nextPage ? '#cfcfcf' : '#363636'} />
         </button>
       </PageAction>
     </Container>
