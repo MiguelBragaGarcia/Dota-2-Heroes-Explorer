@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
+import { Link } from 'react-router-dom';
 import logo from '../../assets/dota-logo.svg';
 
 import {
@@ -12,6 +13,7 @@ import {
   AttributeContainer,
   Hero,
   Attribute,
+  HeroType,
   PageAction,
 } from './styles';
 import api from '../../services/api';
@@ -21,13 +23,7 @@ interface HeroData {
   localized_name: string;
   primary_attr: string;
   img: string;
-  base_str: number;
-  base_agi: number;
-  base_int: number;
-
-  str_gain: number;
-  agi_gain: number;
-  int_gain: number;
+  attack_type: string;
 }
 
 const Home: React.FC = () => {
@@ -85,7 +81,9 @@ const Home: React.FC = () => {
     <Container>
       <HeaderContainer>
         <Header>
-          <img src={logo} alt="dota" />
+          <Link to="/">
+            <img src={logo} alt="dota" />
+          </Link>
 
           <List>
             <li>
@@ -106,29 +104,29 @@ const Home: React.FC = () => {
 
       <Content>
         {heroesInPage.map((hero) => (
-          <Hero
-            key={hero.id}
-            primaryAttribute={hero.primary_attr}
-            heroImgUrl={hero.img}
-          >
-            <h1>{hero.localized_name}</h1>
+          <Link key={hero.id} to={`/hero/${hero.id}`}>
+            <Hero primaryAttribute={hero.primary_attr} heroImgUrl={hero.img}>
+              <h1>{hero.localized_name}</h1>
+              <img src={hero.img} alt={hero.localized_name} />
+              {/* <AttributeContainer>
+                <Attribute type="str">
+                  {hero.base_str} + {hero.str_gain}
+                </Attribute>
 
-            <img src={hero.img} alt={hero.localized_name} />
+                <Attribute type="agi">
+                  {hero.base_agi} + {hero.agi_gain}
+                </Attribute>
 
-            <AttributeContainer>
-              <Attribute type="str">
-                {hero.base_str} + {hero.str_gain}
-              </Attribute>
+                <Attribute type="int">
+                  {hero.base_int} + {hero.int_gain}
+                </Attribute>
+              </AttributeContainer> */}
 
-              <Attribute type="agi">
-                {hero.base_agi} + {hero.agi_gain}
-              </Attribute>
-
-              <Attribute type="int">
-                {hero.base_int} + {hero.int_gain}
-              </Attribute>
-            </AttributeContainer>
-          </Hero>
+              <HeroType>
+                <strong>{hero.attack_type}</strong>
+              </HeroType>
+            </Hero>
+          </Link>
         ))}
       </Content>
 

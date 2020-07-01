@@ -21,14 +21,13 @@ export const HeaderContainer = styled.div`
 `;
 
 export const Header = styled.div`
+  display: flex;
   max-width: 1280px;
   margin: 0 auto;
-  padding: 10px 0;
-  display: flex;
-  align-items: center;
+  padding: 10px;
 
   img {
-    margin: 0 5%;
+    margin: 0 0 0 5%;
     width: 50px;
     height: 50px;
   }
@@ -49,6 +48,7 @@ export const List = styled.ul`
       border: none;
       color: #fff;
       font-weight: bold;
+      font-size: max(14px, 0.9vw);
       background: #363636;
       height: 50px;
     }
@@ -60,25 +60,27 @@ export const List = styled.ul`
   li:last-of-type {
     border-right: none;
   }
+
+  @media screen and (max-width: 700px) {
+    display: none;
+  }
+
   /* Falta fazer o o header responsivo parte dos textos */
 `;
 
 export const Content = styled.div`
-  width: 100%;
   max-width: 1280px;
-
   margin: 80px auto;
-  border-radius: 8px;
 
   display: grid;
   grid-template-columns: auto auto auto auto;
+  grid-gap: 33px;
 
   padding: 10px;
   transition: divContent 0.3s linear;
 
-  > div:hover {
-    box-shadow: 3px 3px 4px 3px ${lighten(0.1, '#363636')};
-    transform: translateY(-10px);
+  a {
+    text-decoration: none;
   }
 
   @media screen and (max-width: 1300px) {
@@ -107,9 +109,9 @@ export const Hero = styled.div<HeroAttribute>`
   text-align: center;
 
   background: #0f1211;
+
   color: #fff;
 
-  margin: 15px;
   border-radius: 4px;
 
   h1 {
@@ -142,12 +144,19 @@ export const Hero = styled.div<HeroAttribute>`
     border-radius: 10px;
   }
 
+  &:hover {
+    box-shadow: 3px 3px 4px 3px ${lighten(0.1, '#363636')};
+    transform: translateY(-10px);
+  }
+
   @media screen and (max-width: 700px) {
     width: 350px;
     height: 300px;
 
   }
 `;
+
+export const HeroType = styled.div``;
 
 export const AttributeContainer = styled.div`
   display: flex;
