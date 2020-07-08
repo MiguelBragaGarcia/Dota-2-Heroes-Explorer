@@ -6,10 +6,6 @@ interface HeroAttribute {
   heroImgUrl: string;
 }
 
-interface AttributeInfo {
-  type: string;
-}
-
 export const Container = styled.div`
   width: 100%;
 `;
@@ -157,65 +153,6 @@ export const Hero = styled.div<HeroAttribute>`
 `;
 
 export const HeroType = styled.div``;
-
-export const AttributeContainer = styled.div`
-  display: flex;
-`;
-
-export const Attribute = styled.p<AttributeInfo>`
-
-  font-weight: 400;
-  padding: 3px 5px;
-  font-size: 15px;
-
-
-
-    ${(props) =>
-      props.type === 'str' &&
-      css`
-        color: red;
-
-        &::before {
-          content: '';
-          height: 15px;
-          width: 15px;
-          background-color: red;
-          border-radius: 50%;
-          display: inline-block;
-          margin-right: 5px;
-        }
-      `}
-    ${(props) =>
-      props.type === 'agi' &&
-      css`
-        color: green;
-
-        &::before {
-          content: '';
-          height: 15px;
-          width: 15px;
-          background-color: green;
-          border-radius: 50%;
-          display: inline-block;
-          margin-right: 5px;
-        }
-      `}
-    ${(props) =>
-      props.type === 'int' &&
-      css`
-        color: blue;
-
-        &::before {
-          content: '';
-          height: 15px;
-          width: 15px;
-          background-color: blue;
-          border-radius: 50%;
-          display: inline-block;
-          margin-right: 5px;
-        }
-      `};
-`;
 
 export const PageAction = styled.div`
   display: flex;

@@ -10,9 +10,7 @@ import {
   Header,
   List,
   Content,
-  AttributeContainer,
   Hero,
-  Attribute,
   HeroType,
   PageAction,
 } from './styles';
@@ -108,19 +106,6 @@ const Home: React.FC = () => {
             <Hero primaryAttribute={hero.primary_attr} heroImgUrl={hero.img}>
               <h1>{hero.localized_name}</h1>
               <img src={hero.img} alt={hero.localized_name} />
-              {/* <AttributeContainer>
-                <Attribute type="str">
-                  {hero.base_str} + {hero.str_gain}
-                </Attribute>
-
-                <Attribute type="agi">
-                  {hero.base_agi} + {hero.agi_gain}
-                </Attribute>
-
-                <Attribute type="int">
-                  {hero.base_int} + {hero.int_gain}
-                </Attribute>
-              </AttributeContainer> */}
 
               <HeroType>
                 <strong>{hero.attack_type}</strong>
