@@ -11,6 +11,10 @@ import {
   Attribute,
   HeroInfoContainer,
   HeroTextInfo,
+  MatchInfo,
+  LastMatchsWithTheHero,
+  TeamHeroes,
+  MatchHeroContainer,
 } from './styles';
 
 interface HeroParams {
@@ -22,6 +26,7 @@ interface HeroData {
   localized_name: string;
   primary_attr: string;
   img: string;
+  icon: string;
   base_str: number;
   base_agi: number;
   base_int: number;
@@ -41,8 +46,21 @@ interface HeroData {
   int_gain: number;
 }
 
+interface MatchesInfo {
+  match_id: number;
+  avg_mmr: number;
+
+  radiant_team: string;
+  radiant_team_icon_link: string[];
+  dire_team: string;
+  dire_team_icon_link: string[];
+}
+
 const Hero: React.FC = () => {
+  const [heroes, setHeroes] = useState<HeroData[]>([]);
   const [selectedHero, setSelectedHero] = useState<HeroData>();
+  const [matches, setMatches] = useState<MatchesInfo[] | undefined>();
+
   const manaPerIntelligence = 12;
   const healthPerIntelligence = 20;
   const agilityPerArmor = 6;
@@ -54,20 +72,72 @@ const Hero: React.FC = () => {
       const cdnSteam = 'https://steamcdn-a.akamaihd.net';
 
       const response = await api.get<HeroData[]>('/heroStats');
+
       const formattedHeroes = response.data.map((hero) => {
         return {
           ...hero,
           img: cdnSteam.concat(hero.img),
+          icon: cdnSteam.concat(hero.icon),
         };
       });
 
       const filteredHero = formattedHeroes.find((hero) => hero.id === heroId);
-
+      setHeroes(formattedHeroes);
       setSelectedHero(filteredHero);
     }
 
     loadHeroesData();
   }, [heroId]);
+
+  useEffect(() => {
+    async function loadLastMatches() {
+      const response = await api.get<MatchesInfo[]>('/publicMatches');
+
+      const filteredMatches = response.data.filter(
+        (match) =>
+          match.radiant_team.search(params.id) > 0 ||
+          match.dire_team.search(params.id) > 0
+      );
+
+      const formattedMatches = filteredMatches.map((match) => {
+        const radiantTeamSplitted = match.radiant_team.split(',');
+        const direTeamSplitted = match.dire_team.split(',');
+
+        const radiantFormattedHeroIcon: string[] = [];
+        const direFormattedHeroIcon: string[] = [];
+
+        radiantTeamSplitted.forEach((atualHeroId) => {
+          const atualHero = heroes.find(
+            (hero) => hero.id === Number(atualHeroId)
+          );
+
+          if (atualHero) {
+            radiantFormattedHeroIcon.push(atualHero.icon);
+          }
+        });
+
+        direTeamSplitted.forEach((atualHeroId) => {
+          const atualHero = heroes.find(
+            (hero) => hero.id === Number(atualHeroId)
+          );
+
+          if (atualHero) {
+            direFormattedHeroIcon.push(atualHero.icon);
+          }
+        });
+
+        return {
+          ...match,
+          radiant_team_icon_link: radiantFormattedHeroIcon,
+          dire_team_icon_link: direFormattedHeroIcon,
+        };
+      });
+
+      setMatches(formattedMatches);
+    }
+
+    loadLastMatches();
+  }, [params.id, heroes]);
 
   const CalculatedMana = useMemo(() => {
     if (selectedHero) {
@@ -109,7 +179,7 @@ const Hero: React.FC = () => {
   return (
     <Container>
       {selectedHero && (
-        <HeroContainer>
+        <HeroContainer key={selectedHero.id}>
           <img src={selectedHero.img} alt={selectedHero.localized_name} />
           <HeroInfoContainer>
             <HeroHeader>
@@ -119,7 +189,7 @@ const Hero: React.FC = () => {
             </HeroHeader>
             <HeroFunction>
               {selectedHero.roles.map((role) => (
-                <p>{role}</p>
+                <p key={role}>{role}</p>
               ))}
             </HeroFunction>
 
@@ -162,6 +232,29 @@ const Hero: React.FC = () => {
           </HeroInfoContainer>
         </HeroContainer>
       )}
+
+      <LastMatchsWithTheHero>
+        <MatchHeroContainer>
+          {matches &&
+            matches.map((match) => (
+              <MatchInfo key={match.match_id}>
+                <TeamHeroes>
+                  {match.radiant_team_icon_link.map((icon) => (
+                    <img src={icon} alt={icon} />
+                  ))}
+                </TeamHeroes>
+
+                <TeamHeroes>
+                  {match.dire_team_icon_link.map((icon) => (
+                    <img src={icon} alt={icon} />
+                  ))}
+                </TeamHeroes>
+
+                <strong>MMR médio 6700</strong>
+              </MatchInfo>
+            ))}
+        </MatchHeroContainer>
+      </LastMatchsWithTheHero>
     </Container>
   );
 };

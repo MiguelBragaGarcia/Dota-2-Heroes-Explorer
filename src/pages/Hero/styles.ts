@@ -129,3 +129,29 @@ export const HeroTextInfo = styled.div`
   font-weight: bold;
   margin: 10px 0;
 `;
+
+export const LastMatchsWithTheHero = styled.div``;
+
+export const MatchHeroContainer = styled.div`
+  margin: 10px 0;
+
+  border: 1px solid #000;
+  align-items: center;
+`;
+
+export const MatchInfo = styled.div`
+  display: flex;
+  flex-direction: row;
+
+  margin-bottom: 10px;
+`;
+
+export const TeamHeroes = styled.div`
+  img {
+    margin: 0 5px;
+  }
+
+  & + div {
+    margin-left: 20px;
+  }
+`;
