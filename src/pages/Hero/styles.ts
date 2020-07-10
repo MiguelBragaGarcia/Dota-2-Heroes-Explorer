@@ -130,28 +130,27 @@ export const HeroTextInfo = styled.div`
   margin: 10px 0;
 `;
 
-export const LastMatchsWithTheHero = styled.div``;
+export const LastMatchsWithTheHero = styled.div`
+  background: #0f1211;
 
-export const MatchHeroContainer = styled.div`
-  margin: 10px 0;
+  a {
+    text-decoration: none;
+    color: #0f1211;
+  }
 
-  border: 1px solid #000;
-  align-items: center;
+  > p {
+    font-weight: bold;
+    padding: 5px 20px;
+    color: #fff;
+  }
 `;
 
-export const MatchInfo = styled.div`
+export const Match = styled.div`
   display: flex;
-  flex-direction: row;
-
-  margin-bottom: 10px;
-`;
-
-export const TeamHeroes = styled.div`
-  img {
-    margin: 0 5px;
-  }
-
-  & + div {
-    margin-left: 20px;
-  }
+  flex: 1;
+  margin: 20px 20px;
+  padding: 5px 10px;
+  justify-content: space-between;
+  align-items: center;
+  background: #616c7d;
 `;

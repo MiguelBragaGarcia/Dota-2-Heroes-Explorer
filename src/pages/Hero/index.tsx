@@ -11,10 +11,8 @@ import {
   Attribute,
   HeroInfoContainer,
   HeroTextInfo,
-  MatchInfo,
   LastMatchsWithTheHero,
-  TeamHeroes,
-  MatchHeroContainer,
+  Match,
 } from './styles';
 
 interface HeroParams {
@@ -46,20 +44,19 @@ interface HeroData {
   int_gain: number;
 }
 
-interface MatchesInfo {
+interface ProMatches {
   match_id: number;
-  avg_mmr: number;
-
-  radiant_team: string;
-  radiant_team_icon_link: string[];
-  dire_team: string;
-  dire_team_icon_link: string[];
+  match_link: string;
+  league_name: string;
+  radiant: boolean;
+  kills: number;
+  deaths: number;
+  assists: number;
 }
 
 const Hero: React.FC = () => {
-  const [heroes, setHeroes] = useState<HeroData[]>([]);
   const [selectedHero, setSelectedHero] = useState<HeroData>();
-  const [matches, setMatches] = useState<MatchesInfo[] | undefined>();
+  const [matches, setMatches] = useState<ProMatches[] | undefined>();
 
   const manaPerIntelligence = 12;
   const healthPerIntelligence = 20;
@@ -71,73 +68,64 @@ const Hero: React.FC = () => {
     async function loadHeroesData() {
       const cdnSteam = 'https://steamcdn-a.akamaihd.net';
 
+      // Steam CDN don't provide this 2 icons
+      const snapFireHeroID = 128;
+      const voidSpiritHeroID = 126;
+
       const response = await api.get<HeroData[]>('/heroStats');
 
-      const formattedHeroes = response.data.map((hero) => {
-        return {
-          ...hero,
-          img: cdnSteam.concat(hero.img),
-          icon: cdnSteam.concat(hero.icon),
-        };
-      });
+      const filteredHero = response.data.find((hero) => hero.id === heroId);
 
-      const filteredHero = formattedHeroes.find((hero) => hero.id === heroId);
-      setHeroes(formattedHeroes);
-      setSelectedHero(filteredHero);
+      let formattedHero = {} as HeroData;
+
+      if (filteredHero) {
+        if (filteredHero.id === snapFireHeroID) {
+          formattedHero = {
+            ...filteredHero,
+            img: cdnSteam.concat(filteredHero.img),
+            icon:
+              'https://gamepedia.cursecdn.com/dota2_gamepedia/e/e1/Snapfire_minimap_icon.png?version=53f2eb37eee5789a02c0a23bc90e5267',
+          };
+        }
+
+        if (filteredHero.id === voidSpiritHeroID) {
+          formattedHero = {
+            ...filteredHero,
+            img: cdnSteam.concat(filteredHero.img),
+            icon:
+              'https://gamepedia.cursecdn.com/dota2_gamepedia/0/02/Void_Spirit_minimap_icon.png?version=aa96b743899de63ca9997ab58dffa01d',
+          };
+        }
+
+        formattedHero = {
+          ...filteredHero,
+          img: cdnSteam.concat(filteredHero.img),
+          icon: cdnSteam.concat(filteredHero.icon),
+        };
+      }
+
+      setSelectedHero(formattedHero);
     }
 
     loadHeroesData();
   }, [heroId]);
 
   useEffect(() => {
-    async function loadLastMatches() {
-      const response = await api.get<MatchesInfo[]>('/publicMatches');
+    async function loadProMatches() {
+      const response = await api.get<ProMatches[]>(`/heroes/${heroId}/matches`);
 
-      const filteredMatches = response.data.filter(
-        (match) =>
-          match.radiant_team.search(params.id) > 0 ||
-          match.dire_team.search(params.id) > 0
-      );
-
-      const formattedMatches = filteredMatches.map((match) => {
-        const radiantTeamSplitted = match.radiant_team.split(',');
-        const direTeamSplitted = match.dire_team.split(',');
-
-        const radiantFormattedHeroIcon: string[] = [];
-        const direFormattedHeroIcon: string[] = [];
-
-        radiantTeamSplitted.forEach((atualHeroId) => {
-          const atualHero = heroes.find(
-            (hero) => hero.id === Number(atualHeroId)
-          );
-
-          if (atualHero) {
-            radiantFormattedHeroIcon.push(atualHero.icon);
-          }
-        });
-
-        direTeamSplitted.forEach((atualHeroId) => {
-          const atualHero = heroes.find(
-            (hero) => hero.id === Number(atualHeroId)
-          );
-
-          if (atualHero) {
-            direFormattedHeroIcon.push(atualHero.icon);
-          }
-        });
-
+      const formattedProMatches = response.data.map((match) => {
         return {
           ...match,
-          radiant_team_icon_link: radiantFormattedHeroIcon,
-          dire_team_icon_link: direFormattedHeroIcon,
+          match_link: `https://www.opendota.com/matches/${match.match_id}`,
         };
       });
 
-      setMatches(formattedMatches);
+      setMatches(formattedProMatches);
     }
 
-    loadLastMatches();
-  }, [params.id, heroes]);
+    loadProMatches();
+  }, [heroId]);
 
   const CalculatedMana = useMemo(() => {
     if (selectedHero) {
@@ -232,28 +220,25 @@ const Hero: React.FC = () => {
           </HeroInfoContainer>
         </HeroContainer>
       )}
-
       <LastMatchsWithTheHero>
-        <MatchHeroContainer>
-          {matches &&
-            matches.map((match) => (
-              <MatchInfo key={match.match_id}>
-                <TeamHeroes>
-                  {match.radiant_team_icon_link.map((icon) => (
-                    <img src={icon} alt={icon} />
-                  ))}
-                </TeamHeroes>
+        <p>Últimas partidas profissionais com este herói</p>
 
-                <TeamHeroes>
-                  {match.dire_team_icon_link.map((icon) => (
-                    <img src={icon} alt={icon} />
-                  ))}
-                </TeamHeroes>
+        {matches &&
+          matches.map((match) => (
+            <a href={match.match_link} key={match.match_id}>
+              <Match>
+                <img
+                  src={selectedHero?.icon}
+                  alt={selectedHero?.localized_name}
+                />
+                <strong>{match.league_name}</strong>
 
-                <strong>MMR médio 6700</strong>
-              </MatchInfo>
-            ))}
-        </MatchHeroContainer>
+                <strong>
+                  {match.kills}/{match.deaths}/{match.assists}
+                </strong>
+              </Match>
+            </a>
+          ))}
       </LastMatchsWithTheHero>
     </Container>
   );
