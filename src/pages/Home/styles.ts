@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { darken, lighten } from 'polished';
+import {  lighten } from 'polished';
 
 interface HeroAttribute {
   primaryAttribute: string;
@@ -10,59 +10,6 @@ export const Container = styled.div`
   width: 100%;
 `;
 
-export const HeaderContainer = styled.div`
-  width: 100%;
-  height: 70px;
-  background: #363636;
-`;
-
-export const Header = styled.div`
-  display: flex;
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 10px;
-
-  img {
-    margin: 0 0 0 5%;
-    width: 50px;
-    height: 50px;
-  }
-`;
-
-export const List = styled.ul`
-  display: flex;
-  flex-direction: row;
-  list-style: none;
-  padding: 0 5%;
-
-  li {
-    padding: 0 10px;
-    border-right: 2px solid #fff;
-
-    button {
-      padding: 0 20px;
-      border: none;
-      color: #fff;
-      font-weight: bold;
-      font-size: max(14px, 0.9vw);
-      background: #363636;
-      height: 50px;
-    }
-    button:hover {
-      background-color: ${darken(0.05, '#363636')};
-    }
-  }
-
-  li:last-of-type {
-    border-right: none;
-  }
-
-  @media screen and (max-width: 700px) {
-    display: none;
-  }
-
-  /* Falta fazer o o header responsivo parte dos textos */
-`;
 
 export const Content = styled.div`
   max-width: 1280px;
@@ -103,12 +50,12 @@ export const Hero = styled.div<HeroAttribute>`
   justify-content: center;
   flex-direction: column;
   text-align: center;
-
   background: #0f1211;
-
   color: #fff;
-
   border-radius: 4px;
+
+  transition: transform 0.2s linear;
+  transition-delay: 0s;
 
   h1 {
     margin-bottom: 50px;
@@ -141,7 +88,6 @@ export const Hero = styled.div<HeroAttribute>`
   }
 
   &:hover {
-    box-shadow: 3px 3px 4px 3px ${lighten(0.1, '#363636')};
     transform: translateY(-10px);
   }
 

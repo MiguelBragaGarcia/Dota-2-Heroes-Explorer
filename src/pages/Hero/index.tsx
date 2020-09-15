@@ -1,15 +1,14 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useRouteMatch, Link } from 'react-router-dom';
+import { useRouteMatch } from 'react-router-dom';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
-import logo from '../../assets/dota-logo.svg';
+
+import Header from '../../components/Header'
 import api from '../../services/api';
 
 import {
   Container,
-  HeaderContainer,
-  Header,
-  List,
+  
   ContentContainer,
   HeroContainer,
   HeroHeader,
@@ -22,6 +21,7 @@ import {
   Match,
   PageAction,
 } from './styles';
+
 
 interface HeroParams {
   id: string;
@@ -219,28 +219,7 @@ const Hero: React.FC = () => {
 
   return (
     <Container>
-      <HeaderContainer>
-        <Header>
-          <Link to="/">
-            <img src={logo} alt="dota" />
-          </Link>
-
-          <List>
-            <li>
-              <button type="button">Inicio</button>
-            </li>
-            <li>
-              <button type="button">Comunidades</button>
-            </li>
-            <li>
-              <button type="button">Vídeos</button>
-            </li>
-            <li>
-              <button type="button">Pesquisar</button>
-            </li>
-          </List>
-        </Header>
-      </HeaderContainer>
+      <Header></Header>
 
       <ContentContainer>
         {selectedHero && (

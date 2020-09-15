@@ -2,19 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
 import { Link } from 'react-router-dom';
-import logo from '../../assets/dota-logo.svg';
+
 
 import {
   Container,
-  HeaderContainer,
-  Header,
-  List,
   Content,
   Hero,
   HeroType,
   PageAction,
 } from './styles';
 import api from '../../services/api';
+import Header from '../../components/Header';
 
 interface HeroData {
   id: number;
@@ -77,28 +75,7 @@ const Home: React.FC = () => {
 
   return (
     <Container>
-      <HeaderContainer>
-        <Header>
-          <Link to="/">
-            <img src={logo} alt="dota" />
-          </Link>
-
-          <List>
-            <li>
-              <button type="button">Inicio</button>
-            </li>
-            <li>
-              <button type="button">Comunidades</button>
-            </li>
-            <li>
-              <button type="button">Vídeos</button>
-            </li>
-            <li>
-              <button type="button">Pesquisar</button>
-            </li>
-          </List>
-        </Header>
-      </HeaderContainer>
+      <Header/>
 
       <Content>
         {heroesInPage.map((hero) => (
